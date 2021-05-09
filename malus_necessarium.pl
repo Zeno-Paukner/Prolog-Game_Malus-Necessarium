@@ -1,4 +1,4 @@
-/* <The name of this game>, by <your name goes here>. */
+/* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
 :- dynamic i_am_at/1, at/2, holding/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
@@ -28,6 +28,8 @@ take(_) :-
         write('I don''t see it here.'),
         nl.
 
+/*These rules describe how to check your inventory*/
+inventory :- holding(X),write(X).
 
 /* These rules describe how to put down an object. */
 
