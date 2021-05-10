@@ -5,7 +5,53 @@
 
 i_am_at(torture_chamber).
 
-path(someplace, n, someplace).
+/* These facts describe how the places are connected. 
+   hallway name syntax:
+   hallway_xy
+   x: l lower-level, u upper-level
+   y: hallway index, starting top left corner, indexing clockwise, see map for reference
+*/
+
+path(torture_chamber, n, hallway_l5).
+
+path(hallway_l5, s, torture_chamber).
+path(hallway_l5, w, hallway_l6).
+path(hallway_l5, n, hallway_l4).
+
+path(hallway_l6, e, hallway_l5).
+path(hallway_l6, s, workshop).
+path(hallway_l6, n, electrical_room).
+path(hallway_l6, w, hallway_l7).
+
+path(electrical_room, s, hallway_l6).
+path(workshop, n, hallway_l6).
+
+path(hallway_l7, e, hallway_l6).
+path(hallway_l7, n, hallway_l1).
+
+path(hallway_l1, w, west_staircase).
+path(hallway_l1, s, hallway_l7).
+path(hallway_l1, e, hallway_l2).
+
+path(hallway_l2, w, hallway_l1).
+path(hallway_l2, e, hallway_l3).
+path(hallway_l2, n, prison).
+
+path(prison, s, hallway_l2).
+
+path(hallway_l3, s, party_room).
+path(hallway_l3, w, hallway_l2).
+path(hallway_l3, e, hallway_l4).
+
+path(party_room, n, hallway_l3).
+
+path(hallway_l4, e, east_staircase).
+path(hallway_l4, w, hallway_l3).
+path(hallway_l4, s, hallway_l5).
+
+
+/* These facts tell where the various objects in the game
+   are located. */
 
 at(crowbar, workshop).
 
@@ -119,6 +165,7 @@ instructions :-
         write('n.  s.  e.  w.     -- to go in that direction.'), nl,
         write('take(Object).      -- to pick up an object.'), nl,
         write('drop(Object).      -- to put down an object.'), nl,
+		write('inventory.         -- to go through your inventory.'), nl,
         write('look.              -- to look around you again.'), nl,
         write('instructions.      -- to see this message again.'), nl,
         write('halt.              -- to end the game and quit.'), nl,
@@ -135,15 +182,22 @@ start :-
 /* These rules describe the various rooms.  Depending on
    circumstances, a room may have more than one description. */
 
-describe(torture_chamber) :- write('You wake up and find yourself strapped with ropes to a wooden chair. From your wrists cables are going to what seems to be a lie detector. The room you are in looks old and abondened. The only door is a few metres in front of. Between you and the door water is dripping down from on old, rusty pipe, forming a puddle of formidable size.'), nl.
+describe(torture_chamber) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), nl.
 
-describe(workshop) :- write('This room looks just as bad as everything else it seems and like a workshop with broken tools lying everywhere. You notice under some
-                             boxes something that resembles a crowbar'), nl.
+describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), nl.
 
-describe(stairs) :- write('Even though there are some holes in them, these stairs leading one story up look usable.'), nl.
+describe(west_staircase) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), nl.
 
-describe(electrical_room) :- write('This room looks just as bad as everything else it seems and like an electrical room with loose tools lying on the ground and hanging from the ceiling. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), nl.
+describe(east_staircase) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), nl.
+
+describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), nl.
 
 describe(party_room) :- write('...'), nl.
 
+/*what commie trash is that*/
 describe(comrades_room) :- write('...'), nl.
+
+
+describe(comrades_room) :- write('...'), nl.
+
+describe(X) :- write('You are at:'), write(X), nl.
