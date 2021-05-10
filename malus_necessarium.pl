@@ -136,3 +136,4 @@ start :-
 
 describe(someplace) :- write('You are someplace.'), nl.
 
+describe(torture_chamber) :- write('You wake up and find yourself trapped to a chair. ...'), nl.
