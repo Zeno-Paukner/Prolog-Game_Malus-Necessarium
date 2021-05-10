@@ -1,4 +1,4 @@
-/* Malus-Necessarium, by Lasinger, Lehner, Paukner, Sarvan. */
+/* <The name of this game>, by <your name goes here>. */
 
 :- dynamic i_am_at/1, at/2, holding/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
@@ -133,3 +133,4 @@ start :-
    circumstances, a room may have more than one description. */
 
 describe(someplace) :- write('You are someplace.'), nl.
+
