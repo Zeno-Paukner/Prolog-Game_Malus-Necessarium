@@ -3,11 +3,11 @@
 :- dynamic i_am_at/1, at/2, holding/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
-i_am_at(someplace).
+i_am_at(torture_chamber).
 
 path(someplace, n, someplace).
 
-at(thing, someplace).
+at(crowbar, workshop).
 
 /* These rules describe how to pick up an object. */
 
@@ -28,7 +28,8 @@ take(_) :-
         write('I don''t see it here.'),
         nl.
 
-/*These rules describe how to check your inventory*/
+/* These rules describe how to check your inventory */
+
 inventory :- holding(X),write(X).
 
 /* These rules describe how to put down an object. */
@@ -134,16 +135,14 @@ start :-
 /* These rules describe the various rooms.  Depending on
    circumstances, a room may have more than one description. */
 
-describe(someplace) :- write('You are someplace.'), nl.
-
-describe(torture_chamber) :- write('You wake up and find yourself strapped with ropes to a wooden chair. From your wrists cables are going to what seems to be a
-                                    lie detector. The room you are in looks old and abondened. The only door is a few metres in front of. Between you and the door
-                                    water is dripping down from on old, rusty pipe, forming a puddle of formidable size.'), nl.
+describe(torture_chamber) :- write('You wake up and find yourself strapped with ropes to a wooden chair. From your wrists cables are going to what seems to be a lie detector. The room you are in looks old and abondened. The only door is a few metres in front of. Between you and the door water is dripping down from on old, rusty pipe, forming a puddle of formidable size.'), nl.
 
 describe(workshop) :- write('This room looks just as bad as everything else it seems and like a workshop with broken tools lying everywhere. You notice under some
                              boxes something that resembles a crowbar'), nl.
 
-describe(electrical_room) :- write('...'), nl.
+describe(stairs) :- write('Even though there are some holes in them, these stairs leading one story up look usable.'), nl.
+
+describe(electrical_room) :- write('This room looks just as bad as everything else it seems and like an electrical room with loose tools lying on the ground and hanging from the ceiling. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), nl.
 
 describe(party_room) :- write('...'), nl.
 
