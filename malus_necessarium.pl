@@ -136,4 +136,15 @@ start :-
 
 describe(someplace) :- write('You are someplace.'), nl.
 
-describe(torture_chamber) :- write('You wake up and find yourself trapped to a chair. ...'), nl.
+describe(torture_chamber) :- write('You wake up and find yourself strapped with ropes to a wooden chair. From your wrists cables are going to what seems to be a
+                                    lie detector. The room you are in looks old and abondened. The only door is a few metres in front of. Between you and the door
+                                    water is dripping down from on old, rusty pipe, forming a puddle of formidable size.'), nl.
+
+describe(workshop) :- write('This room looks just as bad as everything else it seems and like a workshop with broken tools lying everywhere. You notice under some
+                             boxes something that resembles a crowbar'), nl.
+
+describe(electrical_room) :- write('...'), nl.
+
+describe(party_room) :- write('...'), nl.
+
+describe(comrades_room) :- write('...'), nl.
