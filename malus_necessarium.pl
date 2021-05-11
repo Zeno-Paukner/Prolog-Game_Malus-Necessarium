@@ -5,7 +5,7 @@
 
 i_am_at(torture_chamber).
 
-/* These facts describe how the places are connected. 
+/* These facts describe how the places are connected.
    hallway name syntax:
    hallway_xy
    x: l lower-level, u upper-level
@@ -54,6 +54,12 @@ path(hallway_l4, s, hallway_l5).
    are located. */
 
 at(crowbar, workshop).
+
+/* color combinations */
+
+equals_green(blue, yellow) ; (yellow, blue).
+eqauls_purple(blue, red) ; (red, blue).
+eqauls_orange(red, yellow) ; (yellow red).
 
 /* These rules describe how to pick up an object. */
 
@@ -194,10 +200,14 @@ describe(electrical_room) :- write('With wires hanging from the ceiling and brok
 
 describe(party_room) :- write('...'), nl.
 
-/*what commie trash is that*/
+/* what commie trash is that */
 describe(comrades_room) :- write('...'), nl.
-
 
 describe(comrades_room) :- write('...'), nl.
 
 describe(X) :- write('You are at:'), write(X), nl.
+
+/* wire puzzle */
+
+investigate(electrical_box) :- i_am_at(electrical_room), write('wires of different colors ..., green, blue, purple light').
+/* connect_wires(WireX, WireY) :- */
