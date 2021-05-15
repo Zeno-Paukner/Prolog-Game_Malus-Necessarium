@@ -35,9 +35,9 @@ path(hallway_l1, e, hallway_l2).
 
 path(hallway_l2, w, hallway_l1).
 path(hallway_l2, e, hallway_l3).
-path(hallway_l2, n, prison).
+path(hallway_l2, n, jail).
 
-path(prison, s, hallway_l2).
+path(jail, s, hallway_l2).
 
 path(hallway_l3, s, party_room).
 path(hallway_l3, w, hallway_l2).
@@ -179,7 +179,7 @@ instructions :-
         write('take(Object).                -- to pick up an object.'), nl,
         write('drop(Object).                -- to put down an object.'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		    write('inventory.                   -- to go through your inventory.'), nl,
+		write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
         write('instructions.                -- to see this message again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
@@ -201,25 +201,28 @@ start :-
    Possible paths are ordered n, e, s, w
 */
 
-describe(interrogation_room) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), nl.
+describe(interrogation_room) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), !, nl.
 
-describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), nl.
+describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), !, nl.
 
-describe(west_staircase) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), nl.
+describe(west_staircase) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), !, nl.
 
-describe(east_staircase) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), nl.
+describe(east_staircase) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), !, nl.
 
-describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), nl.
+describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), !, nl.
 
-describe(party_room) :- write('It smells like booze | filled with knocked over tables, plastic cups, empty bottles'), nl.
+describe(party_room) :- write('It smells like booze | filled with knocked over tables, plastic cups, empty bottles.'), !, nl.
 
-describe(hallway_l1) :- write('You are in hallway L1. To the east is hallway L2. To the south is hallway L7. To the west is an abondened staircase'), nl.
-describe(hallway_l2) :- write('You are in hallway L2. To the north is a room that appears to serve as a prison. To the east is hallway L3. To the west is the hallway L1'), nl.
-describe(hallway_l3) :- write('You are in hallway L3. To the east is hallway L4. To the south is a dark room stinking of booze. To the west is the hallway L2'), nl.
-describe(hallway_l4) :- write('You are in hallway L4. To the east is a collapsed staircase. To the south is hallway L5. To the west is the hallway L3'), nl.
-describe(hallway_l5) :- write('You are in hallway L5. To the south is the interrogation room. To the west is the hallway L6'), nl.
-describe(hallway_l6) :- write('You are in hallway L6. To the north is a door leading to an electrical room. To the east is hallway L5. To the south are double doors a workshop. To the west is  hallway L7.'), nl.
-describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6'), nl.
+describe(jail) :- write('Inside the small cell you find two men cowering on the floor with their hands tied to their backs.'), !, nl.
+
+
+describe(hallway_l1) :- write('You are in hallway L1. To the east is hallway L2. To the south is hallway L7. To the west is an abondened staircase'), !, nl.
+describe(hallway_l2) :- write('You are in hallway L2. To the north is a room that appears to serve as a prison. To the east is hallway L3. To the west is hallway L1.'), !, nl.
+describe(hallway_l3) :- write('You are in hallway L3. To the east is hallway L4. To the south is a dark room stinking of booze. To the west is  hallway L2.'), !, nl.
+describe(hallway_l4) :- write('You are in hallway L4. To the east is a collapsed staircase. To the south is hallway L5. To the west is hallway L3.'), !, nl.
+describe(hallway_l5) :- write('You are in hallway L5. To the south is the interrogation room. To the west is hallway L6.'), !, nl.
+describe(hallway_l6) :- write('You are in hallway L6. To the north is a door leading to an electrical room. To the east is hallway L5. To the south are double doors leading to a workshop. To the west is hallway L7.'), !, nl.
+describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6'), !, nl.
 
 
 describe(X) :- write('You are at:'), write(X), nl.
