@@ -217,7 +217,7 @@ describe(X) :- write('You are at:'), write(X), nl.
 
 /* wire puzzle */
 
-investigate(electrical_box) :- i_am_at(electrical_room), write('You open the electrical box and in it you find wires of every color imaginable. There are also multiple wires of the same color. On top of the box are three turned off lights and a switch. The lights are colored green, blue and purple.').
+investigate(electrical_box) :- i_am_at(electrical_room), write('You open the electrical box and in it you find wires of every color imaginable. There are also multiple wires of the same color. On top of the box are three turned off lights and a switch. The lights are colored green, orange and purple.').
 
 turn_on_light(Color) :- light_on(Color), !; assert(light_on(Color)).
 
