@@ -3,7 +3,7 @@
 :- dynamic i_am_at/1, at/2, holding/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
-i_am_at(torture_chamber).
+i_am_at(interrogation_room).
 
 /* These facts describe how the places are connected.
    hallway name syntax:
@@ -12,9 +12,9 @@ i_am_at(torture_chamber).
    y: hallway index, starting top left corner, indexing clockwise, see map for reference
 */
 
-path(torture_chamber, n, hallway_l5).
+path(interrogation_room, n, hallway_l5).
 
-path(hallway_l5, s, torture_chamber).
+path(hallway_l5, s, interrogation_room).
 path(hallway_l5, w, hallway_l6).
 path(hallway_l5, n, hallway_l4).
 
@@ -186,9 +186,12 @@ start :-
 
 
 /* These rules describe the various rooms.  Depending on
-   circumstances, a room may have more than one description. */
+   circumstances, a room may have more than one description. 
+	
+   Possible paths are ordered n, e, s, w
+*/
 
-describe(torture_chamber) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), nl.
+describe(interrogation_room) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), nl.
 
 describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), nl.
 
@@ -198,14 +201,20 @@ describe(east_staircase) :- write('The explosion destroyed the staircase in a wa
 
 describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), nl.
 
-describe(party_room) :- write('...'), nl.
+describe(party_room) :- write('It smells like booze | filled with knocked over tables, plastic cups, empty bottles'), nl.
 
-/* what commie trash is that */
-describe(comrades_room) :- write('...'), nl.
+describe(hallway_l1) :- write('You are in hallway L1. To the east is hallway L2. To the south is hallway L7. To the west is an abondened staircase'), nl.
+describe(hallway_l2) :- write('You are in hallway L2. To the north is a room that appears to serve as a prison. To the east is hallway L3. To the west is the hallway L1'), nl.
+describe(hallway_l3) :- write('You are in hallway L3. To the east is hallway L4. To the south is a dark room stinking of booze. To the west is the hallway L2'), nl.
+describe(hallway_l4) :- write('You are in hallway L4. To the east is a collapsed staircase. To the south is hallway L5. To the west is the hallway L3'), nl.
+describe(hallway_l5) :- write('You are in hallway L5. To the south is the interrogation room. To the west is the hallway L6'), nl.
+describe(hallway_l6) :- write('You are in hallway L6. To the north is a door leading to an electrical room. To the east is hallway L5. To the south are double doors a workshop. To the west is  hallway L7.'), nl.
+describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6'), nl.
 
-describe(comrades_room) :- write('...'), nl.
+
 
 describe(X) :- write('You are at:'), write(X), nl.
+
 
 /* wire puzzle */
 
