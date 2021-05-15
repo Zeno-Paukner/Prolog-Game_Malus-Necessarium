@@ -1,6 +1,6 @@
 /* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
-:- dynamic i_am_at/1, at/2, holding/1.
+:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
@@ -55,11 +55,18 @@ path(hallway_l4, s, hallway_l5).
 
 at(crowbar, workshop).
 
+/* lights */
+
+light_on(black).
+
 /* color combinations */
 
-equals_green(blue, yellow) ; (yellow, blue).
-eqauls_purple(blue, red) ; (red, blue).
-eqauls_orange(red, yellow) ; (yellow red).
+equals_green(blue, yellow).
+eqauls_green(yellow, blue).
+eqauls_purple(blue, red).
+eqauls_purple(red, blue).
+eqauls_orange(red, yellow).
+eqauls_orange(yellow, red).
 
 /* These rules describe how to pick up an object. */
 
@@ -167,14 +174,17 @@ instructions :-
         nl,
         write('Enter commands using standard Prolog syntax.'), nl,
         write('Available commands are:'), nl,
-        write('start.             -- to start the game.'), nl,
-        write('n.  s.  e.  w.     -- to go in that direction.'), nl,
-        write('take(Object).      -- to pick up an object.'), nl,
-        write('drop(Object).      -- to put down an object.'), nl,
-		write('inventory.         -- to go through your inventory.'), nl,
-        write('look.              -- to look around you again.'), nl,
-        write('instructions.      -- to see this message again.'), nl,
-        write('halt.              -- to end the game and quit.'), nl,
+        write('start.                       -- to start the game.'), nl,
+        write('n.  s.  e.  w.               -- to go in that direction.'), nl,
+        write('take(Object).                -- to pick up an object.'), nl,
+        write('drop(Object).                -- to put down an object.'), nl,
+        write('investigate(Object)          -- to investigate an object'), nl,
+		    write('inventory.                   -- to go through your inventory.'), nl,
+        write('look.                        -- to look around you again.'), nl,
+        write('instructions.                -- to see this message again.'), nl,
+        write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
+        write('flip_switch.                 -- to flip a switch'), nl,
+        write('halt.                        -- to end the game and quit.'), nl,
         nl.
 
 
@@ -186,8 +196,8 @@ start :-
 
 
 /* These rules describe the various rooms.  Depending on
-   circumstances, a room may have more than one description. 
-	
+   circumstances, a room may have more than one description.
+
    Possible paths are ordered n, e, s, w
 */
 
@@ -212,11 +222,19 @@ describe(hallway_l6) :- write('You are in hallway L6. To the north is a door lea
 describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6'), nl.
 
 
-
 describe(X) :- write('You are at:'), write(X), nl.
 
 
 /* wire puzzle */
 
-investigate(electrical_box) :- i_am_at(electrical_room), write('wires of different colors ..., green, blue, purple light').
-/* connect_wires(WireX, WireY) :- */
+investigate(electrical_box) :- i_am_at(electrical_room), write('You open the electrical box and in it you find wires of every color imaginable. There are also multiple wires of the same color. On top of the box are three turned off lights and a switch. The lights are colored green, orange and purple.').
+
+turn_on_light(Color) :- light_on(Color), !; assert(light_on(Color)).
+
+connect_wires(WireX, WireY) :- equals_green(WireX, WireY), turn_on_light(green), write('The green light turns on.'), !;
+                               eqauls_orange(WireX, WireY), turn_on_light(orange), write('The orange light turns on.'), !;
+                               eqauls_purple(WireX, WireY), turn_on_light(purple), write('The purple light turns on.'), !.
+connect_wires(_, _) :- write('Nothing happens.').
+
+flip_switch :- light_on(green), light_on(orange), light_on(purple), assert(is_open(exit_door)), write('You hear clogs turning.'), nl, !.
+flip_switch :- write('Nothing happens.').
