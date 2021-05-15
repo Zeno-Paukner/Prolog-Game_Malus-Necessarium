@@ -1,9 +1,10 @@
 /* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
-:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1.
+:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/1, dialogue_done/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
+interaction_mode(player)
 
 /* These facts describe how the places are connected.
    hallway name syntax:
@@ -20,7 +21,11 @@ path(hallway_l5, n, hallway_l4).
 
 path(hallway_l6, e, hallway_l5).
 path(hallway_l6, s, workshop).
-path(hallway_l6, n, electrical_room).
+
+path(hallway_l6, n, electrical_room). :- holding(electrical_room_key) , write('You unlock the door and enter the room.'), nl.
+path(hallway_l6, n, electrical_room). :-
+        write('The door is appearantly locked.'), nl,
+        !, fail.
 path(hallway_l6, w, hallway_l7).
 
 path(electrical_room, s, hallway_l6).
@@ -35,7 +40,10 @@ path(hallway_l1, e, hallway_l2).
 
 path(hallway_l2, w, hallway_l1).
 path(hallway_l2, e, hallway_l3).
-path(hallway_l2, n, jail).
+path(hallway_l2, n, jail) :- holding(crowbar) , write('CLACK! The cell door opens slowly.'), nl.
+path(hallway_l2, n, jail) :-
+        write('The cell door appears locked, but a crowbar might do the trick.'), nl,
+        !, fail.
 
 path(jail, s, hallway_l2).
 
@@ -45,9 +53,14 @@ path(hallway_l3, e, hallway_l4).
 
 path(party_room, n, hallway_l3).
 
-path(hallway_l4, e, east_staircase).
+path(hallway_l4, e, east_staircase) :- holding(dynamite) , write('The blast knocks you back. As the dust settles, you enter the staircase.'), retract(holding(dynamite)), nl.
+path(hallway_l4, e, east_staircase) :-
+        write('No way getting through this brick wall like that.'), nl,
+        !, fail.
 path(hallway_l4, w, hallway_l3).
 path(hallway_l4, s, hallway_l5).
+
+path(east_staircase, w, hallway_l4).
 
 
 /* These facts tell where the various objects in the game
@@ -119,6 +132,9 @@ w :- go(w).
 
 /* This rule tells how to move in a given direction. */
 
+go(_) :-
+		interaction_mode(player), write('You cannot move while interacting. Finish the interaction first!'), !.
+
 go(Direction) :-
         i_am_at(Here),
         path(Here, Direction, There),
@@ -137,6 +153,8 @@ look :-
         describe(Place),
         nl,
         notice_objects_at(Place),
+		nl,
+		dialogue(Place),
         nl.
 
 
@@ -211,7 +229,7 @@ describe(east_staircase) :- write('The explosion destroyed the staircase in a wa
 
 describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), !, nl.
 
-describe(party_room) :- write('It smells like booze | filled with knocked over tables, plastic cups, empty bottles.'), !, nl.
+describe(party_room) :- write('A strong smell of booze almost knocks you unconscious. The room is filled with knocked over tables, plastic cups and empty bottles. There might be resources here.'), !, nl.
 
 describe(jail) :- write('Inside the small cell you find two men cowering on the floor with their hands tied to their backs.'), !, nl.
 
@@ -241,3 +259,8 @@ connect_wires(_, _) :- write('Nothing happens.').
 
 flip_switch :- light_on(green), light_on(orange), light_on(purple), assert(is_open(exit_door)), write('You hear clogs turning.'), nl, !.
 flip_switch :- write('Nothing happens.').
+
+
+/* dialogue */
+dialogue(Place) :- !dialogue_done(Place), print_dialogue(Place), assert(dialogue_done(Place).
+print_dialogue(interrogation_room) :- write("Good evening Tiro FE9. Do you have any clue why you are here tonight?").
