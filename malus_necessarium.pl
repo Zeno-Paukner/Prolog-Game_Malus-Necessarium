@@ -1,6 +1,6 @@
 /* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
-:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/1, dialogue_done/1, dialogue_stage/1.
+:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/1, dialogue_done/1, dialogue_stage/1, colleague_rescued/0, colleague_killed/0.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
@@ -338,7 +338,14 @@ flip_switch :- write('Nothing happens.').
 
 /* the end */
 
-end :- write('the end'), finish.
+end :- write('malus necessarium - the end'), nl, write('Hi, my name is Cohen. I''m a responsible for new recruits at Azul Blanco. This was all a test. You escaped. Congratulations.'), nl, print_evidence_score, print_hostage_score, finish.
+
+print_evidence_score :- holding(shelf_documents), holding(desk_documents), write('You secured all evidence. Excellent work!'), nl, !.
+print_evidence_score :- write('It seems that you failed to secure all evidence.'), nl.
+
+print_hostage_score :- colleague_killed, write('Why did you kill your fellow Tiro? Don''t you trust your colleagues?'), nl, !.
+print_hostage_score :- colleague_rescued, write('You have rescued your fellow Tiro. Well done!'), nl, !.
+print_hostage_score :- write('You eihter missed the hostage or just left him in there. Disappointing'), nl.
 
 /* dialogue */
 
@@ -383,6 +390,6 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 					
 print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
 print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
-choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'). /*result*/
-choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'). /*result*/
+choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'), assert(colleague_killed). 
+choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'), assert(colleague_rescued). /*result*/
 choose(3) :- write('Nothing happens.').
