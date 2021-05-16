@@ -1,6 +1,6 @@
 /* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
-:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/1, dialogue_done/1.
+:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/1, dialogue_done/1, dialogue_stage/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
@@ -35,7 +35,7 @@ path(hallway_l7, e, hallway_l6).
 path(hallway_l7, n, hallway_l1).
 
 path(hallway_l1, w, lower_exit) :-  is_open(lower_exit), write('You open the door and finally step into freedom...'), nl.
-path(hallway_l1, w, lower_exit:-
+path(hallway_l1, w, lower_exit) :-
         write('The door is locked, which should be illegal due to the it being marked as an emergency exit.'), nl,
         !, fail.
 path(hallway_l1, s, hallway_l7).
@@ -172,6 +172,7 @@ notice_objects_at(_).
 /* This rule tells how to die. */
 
 die :-
+		retract(dialogue_done(interrogation_room)), /*useful for debugging*/
         finish.
 
 
@@ -219,7 +220,8 @@ start :-
    Possible paths are ordered n, e, s, w
 */
 
-describe(interrogation_room) :- write('You wake up and find yourself tied to a wooden chair with ropes. Your wrists are connected to a lie detector by rusty cables. You can spot bits of the cable where the copper wires are partially exposed. The room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), !, nl.
+describe(interrogation_room) :- dialogue_done(interrogation_room), write('The entire room you are in looks old and abondened. To the north is a door.'), !, nl.
+describe(interrogation_room) :- write('You wake up and find yourself tied to a shabby wooden chair with ropes. Your wrists are connected to some sort of machine with cables. You can spot bits of the cable where the copper wires are partially exposed. The entire room you are in looks old and abondened. To the north is a door, which appears to be unlocked. Between you and the door water is dripping down from an old, rusty pipe, forming a puddle of formidable size.'), !, nl.
 
 describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), !, nl.
 
@@ -264,6 +266,42 @@ flip_switch :- write('Nothing happens.').
 
 
 /* dialogue */
-dialogue(Place) :- dialogue_done(Place), !, nl.
-dialogue(Place) :- print_dialogue(Place), assert(dialogue_done(Place)).
-print_dialogue(interrogation_room) :- write("Good evening Tiro FE9. Do you have any clue why you are here tonight?").
+
+dialogue(Place) :- dialogue_done(Place), !.
+dialogue(Place) :- print_dialogue(Place), print_options(Place), assert(dialogue_done(Place)).
+
+print_options(interrogation_room) :- print_options(1_1).
+
+print_dialogue(interrogation_room) :- write("Good evening Tiro FE9. Do you have any clue why you are here tonight? Well, how should you?"), nl, write("I know that you are a Tiro of Azul Blanco and as you might have guessed, that is a minor inconvenience for me. I have a few questions for you now. You better answer correctly, you won´t fancy the alternative. See this machine over there? ICA approved lie detector, shocks you if you lie. One of your friends has already tested that. Let´s say, it didn´t exactly work out for him. The other friend of yours, on the contrary, chose to cooperate. Smart guy! Choice is yours..."), nl, assert(dialogue_stage(1_1)).
+print_options(1_1) :- write("    1. Provocate him"), nl, write("    2. Initiate talk"), nl.
+choose(1) :- dialogue_stage(1_1), retract(dialogue_stage(1_1)), assert(dialogue_stage(1_2)), print_dialogue(1_2), print_options(1_2).
+	print_dialogue(1_2) :- write("As if I believed a word coming from such a bloody c*nt like you. Who the f*ck do you think you are, thinking you could threaten me like that?"), nl, write("ZAP"), nl, write("Your entire body twitches. It seriously hurts."), nl, write("You fookin´ nonce. You think you´re smart, ey? Lemme tell you something. You´re not in charge here. NOW TALK!"), nl.
+	print_options(1_2) :- write("    1. Provocate him"), nl, write("    2. Initiate talk"), nl.
+	choose(1) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), assert(dialogue_stage(1_3)), print_dialogue(1_3), print_options(1_3).
+		print_dialogue(1_3) :- write("Could you come a lil´ closer, I didn´t hear you."), nl, write("The interrogater walks towards you. You hear a silent splash."), nl.
+		print_options(1_3) :- write("    1. Attack him"), nl, write("    2. Tell a lie"), nl.
+		choose(1) :- dialogue_stage(1_3), retract(dialogue_stage(1_3)), write("You manage to land a near perfect kick on his knee. You manage to dislocate it. He tumbles and drops to the ground. You hit him over the head with your chair. He drops unconscious, the chair brakes, you free yourself from your ties."), nl, retract(interaction_mode(player)), look.
+		choose(2) :- dialogue_stage(1_3), retract(dialogue_stage(1_3)), write("LASK is superior to Blau-Weiss."), nl, write("ZAAAP! The lie detector overcharges and electrocutes the puddle (due to the exposed cable bits), in which the interrogater is standing. He drops to the floor. Although his body´s still twitching, he´s surely dead."), nl, retract(interaction_mode(player)), look.
+	choose(2) :- dialogue_stage(1_1), retract(dialogue_stage(1_1)), nl, assert(dialogue_stage(1_4)), print_options(1_4).
+choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialogue_stage(1_4)), print_options(1_4).
+	print_options(1_4) :- write("    1. Ask for evidence about colleagues"), nl, write("    2. Ask for a question"), nl.
+	choose(1) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_5)), print_dialogue(1_5), print_options(1_5).
+		print_dialogue(1_5) :-  write("I don´t believe you, show me evidence that you even have captured the other Tiros."), nl, write("Very well, make yourself comfortable in the meantime."), nl, write("The interrogater leaves the room"), nl.
+		print_options(1_5) :- write("    1. Try to untie yourself"), nl, write("    2. Wait for the interrogater"), nl.
+		choose(1) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_6)), print_dialogue(1_6), print_options(1_6).
+			print_dialogue(1_6) :- write("You have managed to untie yourself."), nl.
+			print_options(1_6) :- write("    1. Trap the interrogater"), nl, write("    2. Flee"), nl.
+			choose(1) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look.
+			/* add interrogater interaction FAMILY */
+			choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die.
+		choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7).
+	choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7).
+		print_dialogue(1_7) :-  write("What do you want from me?"), nl, write("The Lynn-Incident. Rings a bell?"), nl.
+		print_options(1_7) :- write("    1. Talk"), nl, write("    2. Lie"), nl, write("    2. Remain silent"), nl.
+		choose(1) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write("Long time ago. I don´t really know anything that I have not learned from the news."), nl, write("The lie detector does nothing"), nl, write("Very well, thank you for your cooperation. You´re no longer worth anything to me anymore."), nl, write("The interrogater turns up the voltage to the maximum."), nl, die.
+		choose(2) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), assert(dialogue_stage(1_8)), print_dialogue(1_8), print_options(1_8).																/*rewrite*/
+			print_dialogue(1_8) :-  write("As much as you want to know, but you better take notes, I will only tell you once."), nl, write("Alright."), nl, write("The interrogater leaves the room. The lie detector fires a delayed shock breaking apart the rope, with which you´re tied up with, and fall off."), nl.
+			print_options(1_8) :- write("    1. Trap the interrogater"), nl, write("    2. Flee"), nl.
+			choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look.
+			choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die.
+		choose(3) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write("..."), nl, write("I have warned you, but you don´t seem to listen. Chosen your own fate, huh?"), nl, write("The interrogater turns up the voltage to the maximum."), nl, die.
