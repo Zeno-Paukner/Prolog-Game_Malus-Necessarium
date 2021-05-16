@@ -251,8 +251,9 @@ instructions :-
         write('n.  s.  e.  w.               -- to go in that direction.'), nl,
         write('take(Object).                -- to pick up an object.'), nl,
         write('drop(Object).                -- to put down an object.'), nl,
+        write('choose(Option)               -- to choose a presented option'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		write('inventory.                   -- to go through your inventory.'), nl,
+		    write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
         write('instructions.                -- to see this message again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
@@ -349,7 +350,10 @@ print_hostage_score :- write('You eihter missed the hostage or just left him in 
 
 /* dialogue */
 
-dialogue(Place) :- dialogue_done(Place), !.
+dialogue_exists(interrogation_room).
+dialogue_exists(jail).
+
+dialogue(Place) :- (\+(dialogue_exists(Place)) ; dialogue_done(Place)), !.
 dialogue(Place) :- print_dialogue(Place), print_options(Place), assert(dialogue_done(Place)).
 
 print_options(interrogation_room) :- print_options(1_1).
@@ -387,7 +391,7 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 			choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look, !.
 			choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die, !.
 		choose(3) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write("..."), nl, write("I have warned you, but you don´t seem to listen. Chosen your own fate, huh?"), nl, write("The interrogater turns up the voltage to the maximum."), nl, die, !.
-					
+
 print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
 print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
 choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'), assert(colleague_killed). 
