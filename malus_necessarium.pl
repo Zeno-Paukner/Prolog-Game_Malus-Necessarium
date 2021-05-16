@@ -100,9 +100,9 @@ at(crowbar, workshop).
 at(spray_can, workshop).
 at(key, janitor_room).
 at(gun, living_room).
-at(operation_room, computer).
-at(operation_room, desk_documents).
-at(operation_room, shelf_documents).
+at(computer, operation_room).
+at(desk_documents, operation_room).
+at(shelf_documents, operation_room).
 
 /* color combinations */
 
@@ -394,6 +394,6 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 
 print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
 print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
-choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'), assert(colleague_killed). 
+choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'), assert(colleague_killed).
 choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'), assert(colleague_rescued). /*result*/
 choose(3) :- write('Nothing happens.').
