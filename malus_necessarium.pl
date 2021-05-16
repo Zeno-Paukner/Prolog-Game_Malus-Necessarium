@@ -4,13 +4,13 @@
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
-interaction_mode(player)
+interaction_mode(player).
 
 /* These facts describe how the places are connected.
    hallway name syntax:
    hallway_xy
    x: l lower-level, u upper-level
-   y: hallway index, starting top left corner, indexing clockwise, see map for reference
+   y: hallway index, starting top left corner, indexing clockwise, see map for reference 
 */
 
 path(interrogation_room, n, hallway_l5).
@@ -22,8 +22,8 @@ path(hallway_l5, n, hallway_l4).
 path(hallway_l6, e, hallway_l5).
 path(hallway_l6, s, workshop).
 
-path(hallway_l6, n, electrical_room). :- holding(electrical_room_key) , write('You unlock the door and enter the room.'), nl.
-path(hallway_l6, n, electrical_room). :-
+path(hallway_l6, n, electrical_room) :- holding(electrical_room_key) , write('You unlock the door and enter the room.'), nl.
+path(hallway_l6, n, electrical_room) :-
         write('The door is appearantly locked.'), nl,
         !, fail.
 path(hallway_l6, w, hallway_l7).
@@ -262,5 +262,6 @@ flip_switch :- write('Nothing happens.').
 
 
 /* dialogue */
-dialogue(Place) :- !dialogue_done(Place), print_dialogue(Place), assert(dialogue_done(Place).
+dialogue(Place) :- dialogue_done(Place), !, nl.
+dialogue(Place) :- print_dialogue(Place), assert(dialogue_done(Place)).
 print_dialogue(interrogation_room) :- write("Good evening Tiro FE9. Do you have any clue why you are here tonight?").
