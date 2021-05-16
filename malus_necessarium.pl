@@ -22,7 +22,7 @@ path(hallway_l5, n, hallway_l4).
 path(hallway_l6, e, hallway_l5).
 path(hallway_l6, s, workshop).
 
-path(hallway_l6, n, electrical_room) :- holding(electrical_room_key) , write('You unlock the door and enter the room.'), nl.
+path(hallway_l6, n, electrical_room) :- holding(key) , write('You unlock the door and enter the room.'), nl.
 path(hallway_l6, n, electrical_room) :-
         write('The door is appearantly locked.'), nl,
         !, fail.
@@ -77,15 +77,19 @@ path(hallway_u2, w, hallway_u4).
 path(hallway_u3, n, hallway_u2).
 path(hallway_u3, e, janitor_room).
 path(hallway_u3, s, upper_exit).
+path(janitor_room, w, hallway_u3).
 
 path(hallway_u4, e, hallway_u2).
 path(hallway_u4, s, living_room_1).
 path(hallway_u4, n, LASK_R).
 path(hallway_u4, w, hallway_u5).
+path(LASK_R, s, hallway_u4).
+path(living_room_1, n, hallway_u4).
 
 path(hallway_u5, e, hallway_u4).
 path(hallway_u5, s, living_room_2).
 path(hallway_u5, w, hallway_u6).
+path(living_room_2, n, hallway_u5).
 
 path(hallway_u6, e, hallway_u5).
 
@@ -93,6 +97,7 @@ path(hallway_u6, e, hallway_u5).
    are located. */
 
 at(crowbar, workshop).
+at(key, janitor_room).
 
 /* color combinations */
 
@@ -151,6 +156,9 @@ e :- go(e).
 
 w :- go(w).
 
+u :- go(u).
+
+d :- go(d).
 
 /* This rule tells how to move in a given direction. */
 
@@ -216,7 +224,6 @@ instructions :-
         write('Available commands are:'), nl,
         write('start.                       -- to start the game.'), nl,
         write('n.  s.  e.  w.               -- to go in that direction.'), nl,
-        write('u.  d.                       -- to go up or down.'), nl,
         write('take(Object).                -- to pick up an object.'), nl,
         write('drop(Object).                -- to put down an object.'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
@@ -246,11 +253,9 @@ describe(interrogation_room) :- write('You wake up and find yourself tied to a w
 
 describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor. There is also an spray can laying on the ground, which could be combined with something else.'), !, nl.
 
-describe(lower_exit) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), !, nl.
+describe(east_staircase_lower) :- write('Here the staircase only leads upwards. To the west is hallway L4.'), !, nl.
 
-describe(east_staircase_lower) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), !, nl.
-
-describe(east_staircase_upper) :- write('You reach the upper floor, but the stairs to the first floor are destroyed. You can go west to look around the corner.'), !, nl.
+describe(east_staircase_upper) :- write('You reach the upper floor, but the stairs to the first floor are destroyed so that you can only go downwards. You can go west to look around the corner.'), !, nl.
 
 describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), !, nl.
 
@@ -258,22 +263,22 @@ describe(party_room) :- write('A strong smell of booze almost knocks you unconsc
 
 describe(jail) :- write('Inside the small cell you find two men cowering on the floor with their hands tied to their backs.'), !, nl.
 
-describe(janitor_room) :- write('When you open the door it looks just like a typical janitor room with a mop, a buck, etc. There also some keys that could be useful.'), !, nl.
+describe(janitor_room) :- write('When you open the door it looks just like a typical janitor room with a mop, a buck, etc. There is also a key that could be useful.'), !, nl.
 
 describe(hallway_l1) :- write('You are in hallway L1. To the east is hallway L2. To the south is hallway L7. To the west is an emergency exit.'), !, nl.
 describe(hallway_l2) :- write('You are in hallway L2. To the north is a room that appears to serve as a prison. To the east is hallway L3. To the west is hallway L1.'), !, nl.
 describe(hallway_l3) :- write('You are in hallway L3. To the east is hallway L4. To the south is a dark room stinking of booze. To the west is  hallway L2.'), !, nl.
-describe(hallway_l4) :- write('You are in hallway L4. To the east is a staircase only going upwards. To the south is hallway L5. To the west is hallway L3.'), !, nl.
-describe(hallway_l5) :- write('You are in hallway L5. To the south is the interrogation room. To the west is hallway L6.'), !, nl.
+describe(hallway_l4) :- write('You are in hallway L4. To the east is a staircase. To the south is hallway L5. To the west is hallway L3.'), !, nl.
+describe(hallway_l5) :- write('You are in hallway L5. To the south is the interrogation room. To the west is hallway L6. To the north is L4.'), !, nl.
 describe(hallway_l6) :- write('You are in hallway L6. To the north is a door leading to an electrical room. To the east is hallway L5. To the south are double doors leading to a workshop. To the west is hallway L7.'), !, nl.
-describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6'), !, nl.
+describe(hallway_l7) :- write('You are in hallway L7. To the north is hallway L1. To the east is hallway L6.'), !, nl.
 
-describe(hallway_u1) :- write('You are in hallway U1. To the south is hallway U2.'), !, nl.
-describe(hallway_u2) :- write('You are in hallway U2. To the south is hallway U3. To the west is hallway U4. To the north is hallway U1'), !, nl.
-describe(hallway_u3) :- write('You are in hallway U3. To the south is an emergency exit with what looks like armored people outside. To the east is a door with a sign next to it that says JANITOR. To the north is hallway U2'), !, nl.
+describe(hallway_u1) :- write('You are in hallway U1. To the south is hallway U2. To the east is the staircase.'), !, nl.
+describe(hallway_u2) :- write('You are in hallway U2. To the south is hallway U3. To the west is hallway U4. To the north is hallway U1.'), !, nl.
+describe(hallway_u3) :- write('You are in hallway U3. To the south is an emergency exit with what looks like armored people outside. To the east is a door with a sign next to it that says JANITOR. To the north is hallway U2.'), !, nl.
 describe(hallway_u4) :- write('You are in hallway U4. To the west is hallway U5. To the south is a typical hotel door. To the north is room without a door with people inside. To the east is hallway U2.'), !, nl.
-describe(hallway_u5) :- write('You are in hallway U5. To the south is a typical hotel door. To the west is hallway U6'), !, nl.
-describe(hallway_u6) :- write('You are at the end of the hallway. The only way is back to hallway U5 in the east'), !, nl.
+describe(hallway_u5) :- write('You are in hallway U5. To the south is a typical hotel door. To the west is hallway U6.'), !, nl.
+describe(hallway_u6) :- write('You are at the end of the hallway. The only way is back to hallway U5 in the east.'), !, nl.
 
 describe(X) :- write('You are at:'), write(X), nl.
 
