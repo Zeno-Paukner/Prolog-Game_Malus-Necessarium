@@ -97,6 +97,7 @@ path(hallway_u6, e, hallway_u5).
    are located. */
 
 at(crowbar, workshop).
+at(spray_can, workshop).
 at(key, janitor_room).
 
 /* color combinations */
