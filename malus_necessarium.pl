@@ -143,7 +143,11 @@ investigate(documents) :- i_am_at(office_room), write('You find a page that only
 investigate(computer) :- i_am_at(operation_room), write('I need to enter a password in order to access it.'), !, nl.
 investigate(desk) :- i_am_at(operation_room), write('In one of the drawers you find pictures of other politicians and powerful people. Are these the next targets? You should probably take these desk documents with you.'), !, nl.
 investigate(shelf) :- i_am_at(operation_room), write('Files about the dead US-Vice-President Thomas King and the dead President Mohammed Abiba? Their deaths were declared accidents. Looks like these bastards are behind it. You should probably take these shelf documents with you.'), !, nl.
-investigate(cupboard) :- i_am_at(party_room), write('You find a bottle of alcohol, an old piece of clothing and a lighter. What a coincidence! Your natural instincts have just made a molotov out of it!'), assert(holding(molotov)).
+investigate(cupboard) :- i_am_at(party_room), write('You find a bottle of alcohol, an old piece of clothing and a lighter. What a coincidence! Your natural instincts have just made a molotov out of it! You also notice a crate labelled "fire" in the back. The supposed destination is the interrogation room.'), nl, assert(holding(molotov)).
+
+/* Easter Egg */
+
+fire :- holding(molotov), i_am_at(interrogation_room), write('The entire room is burning! Unfortunately, that includes you!'), die, nl.
 
 
 /* This rule describes how to enter a password */
@@ -226,6 +230,7 @@ notice_objects_at(_).
 /* This rule tells how to die. */
 
 die :-
+		write('You died!'),
 		retract(dialogue_done(interrogation_room)), /*useful for debugging*/
         finish.
 
@@ -253,13 +258,13 @@ instructions :-
         write('drop(Object).                -- to put down an object.'), nl,
         write('choose(Option)               -- to choose a presented option'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		    write('inventory.                   -- to go through your inventory.'), nl,
+		write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
-        write('instructions.                -- to see this message again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
         write('flip_switch.                 -- to flip a switch'), nl,
         write('enter_password(Password).    -- to enter a password'), nl,
         write('combine(Object1, Object2)    -- to combine 2 objects'), nl,
+		write('instructions.                -- to see this message again.'), nl,
         write('halt.                        -- to end the game and quit.'), nl,
         nl.
 
@@ -285,6 +290,7 @@ describe(workshop) :- write('This room looks just as bad as everything else in t
 describe(east_staircase_lower) :- write('Here the staircase only leads upwards. To the west is hallway L4.'), !, nl.
 
 describe(east_staircase_upper) :- write('You reach the upper floor, but the stairs to the first floor are destroyed so that you can only go downwards. You can go west to look around the corner.'), !, nl.
+
 describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), !, nl.
 
 describe(party_room) :- write('A strong smell of booze almost knocks you unconscious. The room is filled with knocked over tables, plastic cups and empty bottles. Investigating a cupboard in the back may provide something useful.'), !, nl.
@@ -337,7 +343,7 @@ flip_switch :- light_on(green), light_on(orange), light_on(purple), assert(is_op
 flip_switch :- write('Nothing happens.').
 
 
-/* the end */
+/* ending */
 
 end :- write('malus necessarium - the end'), nl, write('Hi, my name is Cohen. I''m a responsible for new recruits at Azul Blanco. This was all a test. You escaped. Congratulations.'), nl, print_evidence_score, print_hostage_score, finish.
 
@@ -348,7 +354,7 @@ print_hostage_score :- colleague_killed, write('Why did you kill your fellow Tir
 print_hostage_score :- colleague_rescued, write('You have rescued your fellow Tiro. Well done!'), nl, !.
 print_hostage_score :- write('You eihter missed the hostage or just left him in there. Disappointing'), nl.
 
-/* dialogue */
+/* interactions */
 
 dialogue_exists(interrogation_room).
 dialogue_exists(jail).
@@ -378,7 +384,6 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 			print_dialogue(1_6) :- write("You have managed to untie yourself."), nl, !.
 			print_options(1_6) :- write("    1. Trap the interrogater"), nl, write("    2. Flee"), nl, !.
 			choose(1) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look, !.
-			/* add interrogater interaction FAMILY */
 			choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die, !.
 		choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
 	choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
@@ -395,5 +400,5 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
 print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
 choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'), assert(colleague_killed).
-choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'), assert(colleague_rescued). /*result*/
+choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'), assert(colleague_rescued).
 choose(3) :- write('Nothing happens.').
