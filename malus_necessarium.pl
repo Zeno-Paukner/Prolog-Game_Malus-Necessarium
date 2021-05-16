@@ -22,7 +22,7 @@ path(hallway_l5, n, hallway_l4).
 path(hallway_l6, e, hallway_l5).
 path(hallway_l6, s, workshop).
 
-path(hallway_l6, n, electrical_room) :- holding(key) , write('You unlock the door and enter the room.'), nl, end.
+path(hallway_l6, n, electrical_room) :- holding(key) , write('You unlock the door and enter the room.'), nl, !.
 path(hallway_l6, n, electrical_room) :-
         write('The door is appearantly locked.'), nl,
         !, fail.
@@ -34,7 +34,7 @@ path(workshop, n, hallway_l6).
 path(hallway_l7, e, hallway_l6).
 path(hallway_l7, n, hallway_l1).
 
-path(hallway_l1, w, lower_exit) :-  is_open(lower_exit), write('You open the door and finally step into freedom...'), nl.
+path(hallway_l1, w, lower_exit) :-  is_open(lower_exit), write('You open the door and finally step into freedom...'), nl, end.
 path(hallway_l1, w, lower_exit) :-
         write('The door is locked, which should be illegal due to the it being marked as an emergency exit.'), nl,
         !, fail.
@@ -258,13 +258,13 @@ instructions :-
         write('drop(Object).                -- to put down an object.'), nl,
         write('choose(Option)               -- to choose a presented option'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		write('inventory.                   -- to go through your inventory.'), nl,
+		    write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
         write('flip_switch.                 -- to flip a switch'), nl,
         write('enter_password(Password).    -- to enter a password'), nl,
         write('combine(Object1, Object2)    -- to combine 2 objects'), nl,
-		write('instructions.                -- to see this message again.'), nl,
+		    write('instructions.                -- to see this message again.'), nl,
         write('halt.                        -- to end the game and quit.'), nl,
         nl.
 
