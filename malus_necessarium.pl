@@ -251,8 +251,9 @@ instructions :-
         write('n.  s.  e.  w.               -- to go in that direction.'), nl,
         write('take(Object).                -- to pick up an object.'), nl,
         write('drop(Object).                -- to put down an object.'), nl,
+        write('choose(Option)               -- to choose a presented option'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		write('inventory.                   -- to go through your inventory.'), nl,
+		    write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
         write('instructions.                -- to see this message again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
@@ -342,7 +343,10 @@ end :- write('the end'), finish.
 
 /* dialogue */
 
-dialogue(Place) :- dialogue_done(Place), !.
+dialogue_exists(interrogation_room).
+dialogue_exists(jail).
+
+dialogue(Place) :- (\+(dialogue_exists(Place)) ; dialogue_done(Place)), !.
 dialogue(Place) :- print_dialogue(Place), print_options(Place), assert(dialogue_done(Place)).
 
 print_options(interrogation_room) :- print_options(1_1).
@@ -372,7 +376,7 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 		choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
 	choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
 		print_dialogue(1_7) :-  write("What do you want from me?"), nl, write("The Lynn-Incident. Rings a bell?"), nl, !.
-		print_options(1_7) :- write("    1. Talk"), nl, write("    2. Lie"), nl, write("    2. Remain silent"), nl, !.
+		print_options(1_7) :- write("    1. Talk"), nl, write("    2. Lie"), nl, write("    3. Remain silent"), nl, !.
 		choose(1) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write("Long time ago. I don´t really know anything that I have not learned from the news."), nl, write("The lie detector does nothing"), nl, write("Very well, thank you for your cooperation. You´re no longer worth anything to me anymore."), nl, write("The interrogater turns up the voltage to the maximum."), nl, die, !.
 		choose(2) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), assert(dialogue_stage(1_8)), print_dialogue(1_8), print_options(1_8), !.																/*rewrite*/
 			print_dialogue(1_8) :-  write("As much as you want to know, but you better take notes, I will only tell you once."), nl, write("Alright."), nl, write("The interrogater leaves the room. The lie detector fires a delayed shock breaking apart the rope, with which you´re tied up with, and fall off."), nl, !.
@@ -393,8 +397,8 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 			choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow.'), nl, retract(interaction_mode(player)), look.
 			choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you.'), nl, die.
 		choose(3) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write('...'), nl, write('I have warned you, but you don''t seem to listen. Chosen your own fate, huh?'), nl, write('The interrogater turns up the voltage to the maximum.'), nl, die.
-		
-		
+
+
 print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
 print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
 choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'). /*result*/
