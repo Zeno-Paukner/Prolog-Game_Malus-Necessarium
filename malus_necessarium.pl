@@ -10,7 +10,7 @@ interaction_mode(player).
    hallway name syntax:
    hallway_xy
    x: l lower-level, u upper-level
-   y: hallway index, starting top left corner, indexing clockwise, see map for reference 
+   y: hallway index, starting top left corner, indexing clockwise, see map for reference
 */
 
 path(interrogation_room, n, hallway_l5).
@@ -102,7 +102,7 @@ take(_) :-
 
 /* These rules describe how to check your inventory */
 
-inventory :- holding(X),write(X).
+inventory :- holding(X), write(X).
 
 /* These rules describe how to put down an object. */
 
@@ -226,6 +226,8 @@ describe(workshop) :- write('This room looks just as bad as everything else in t
 describe(west_staircase) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), !, nl.
 
 describe(east_staircase) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), !, nl.
+
+describe(east_staircase_upper) :- write('You reach the upper floor, but the stairs to the first floor are destroyed. You can go west to look around the corner.'), !, nl.
 
 describe(electrical_room) :- write('With wires hanging from the ceiling and broken fuzes lying around, this room appears messy and dark. An electrical box to your left catches your attention as it doesn''t look old and shabby like everything else.'), !, nl.
 
