@@ -228,14 +228,14 @@ die :-
         finish.
 
 
-/* Under UNIX, the "halt." command quits Prolog but does not
+/* Under UNIX, the 'halt.' command quits Prolog but does not
    remove the output window. On a PC, however, the window
    disappears before the final output can be seen. Hence this
-   routine requests the user to perform the final "halt." */
+   routine requests the user to perform the final 'halt.' */
 
 finish :-
         nl,
-        write('The game is over. Please enter the "halt." command.'),
+        write('The game is over. Please enter the 'halt.' command.'),
         nl.
 
 
@@ -250,7 +250,7 @@ instructions :-
         write('take(Object).                -- to pick up an object.'), nl,
         write('drop(Object).                -- to put down an object.'), nl,
         write('investigate(Object)          -- to investigate an object'), nl,
-		    write('inventory.                   -- to go through your inventory.'), nl,
+		write('inventory.                   -- to go through your inventory.'), nl,
         write('look.                        -- to look around you again.'), nl,
         write('instructions.                -- to see this message again.'), nl,
         write('connect_wires(Wire1, Wire2). -- to connect 2 wires'), nl,
