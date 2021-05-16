@@ -368,7 +368,6 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 			print_options(1_6) :- write("    1. Trap the interrogater"), nl, write("    2. Flee"), nl, !.
 			choose(1) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look, !.
 			/* add interrogater interaction FAMILY */
-<<<<<<< Updated upstream
 			choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die, !.
 		choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
 	choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
@@ -381,7 +380,7 @@ choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialo
 			choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow."), nl, retract(interaction_mode(player)), look, !.
 			choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write("Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you."), nl, die, !.
 		choose(3) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write("..."), nl, write("I have warned you, but you don´t seem to listen. Chosen your own fate, huh?"), nl, write("The interrogater turns up the voltage to the maximum."), nl, die, !.
-=======
+
 			choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you.'), nl, die.
 		choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), write('The interrogater shows you a selfie of him and two men, one of them unconscious, one of them dead.'), print_dialogue(1_7), print_options(1_7).
 	choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7).
@@ -401,4 +400,3 @@ print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('
 choose(1) :- write('Sandman brings a bad dream - You snap the sleeping man''s neck.'). /*result*/
 choose(2) :- write('You lift his unconscious body up and carry him on your shoulder.'). /*result*/
 choose(3) :- write('Nothing happens.').
->>>>>>> Stashed changes
