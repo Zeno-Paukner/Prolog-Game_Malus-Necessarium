@@ -34,7 +34,10 @@ path(workshop, n, hallway_l6).
 path(hallway_l7, e, hallway_l6).
 path(hallway_l7, n, hallway_l1).
 
-path(hallway_l1, w, west_staircase).
+path(hallway_l1, w, lower_exit) :-  is_open(lower_exit), write('You open the door and finally step into freedom...'), nl.
+path(hallway_l1, w, lower_exit:-
+        write('The door is locked, which should be illegal due to the it being marked as an emergency exit.'), nl,
+        !, fail.
 path(hallway_l1, s, hallway_l7).
 path(hallway_l1, e, hallway_l2).
 
@@ -53,10 +56,7 @@ path(hallway_l3, e, hallway_l4).
 
 path(party_room, n, hallway_l3).
 
-path(hallway_l4, e, east_staircase) :- holding(dynamite) , write('The blast knocks you back. As the dust settles, you enter the staircase.'), retract(holding(dynamite)), nl.
-path(hallway_l4, e, east_staircase) :-
-        write('No way getting through this brick wall like that.'), nl,
-        !, fail.
+path(hallway_l4, e, east_staircase).
 path(hallway_l4, w, hallway_l3).
 path(hallway_l4, s, hallway_l5).
 
@@ -223,7 +223,7 @@ describe(interrogation_room) :- write('You wake up and find yourself tied to a w
 
 describe(workshop) :- write('This room looks just as bad as everything else in this building. Broken tools are lying around everywhere. Something possibly resembling a crowbar is lying on the floor.'), !, nl.
 
-describe(west_staircase) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), !, nl.
+describe(lower_exit) :- write('Even though the staircase is in a pretty rough shape, these stairs leading one story up look usable.'), !, nl.
 
 describe(east_staircase) :- write('The explosion destroyed the staircase in a way that climbing these stairs seems impossible.'), !, nl.
 
@@ -259,7 +259,7 @@ connect_wires(WireX, WireY) :- equals_green(WireX, WireY), turn_on_light(green),
                                eqauls_purple(WireX, WireY), turn_on_light(purple), write('The purple light turns on.'), !.
 connect_wires(_, _) :- write('Nothing happens.').
 
-flip_switch :- light_on(green), light_on(orange), light_on(purple), assert(is_open(exit_door)), write('You hear clogs turning.'), nl, !.
+flip_switch :- light_on(green), light_on(orange), light_on(purple), assert(is_open(lower_exit)), write('You hear clogs turning.'), nl, !.
 flip_switch :- write('Nothing happens.').
 
 
