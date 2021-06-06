@@ -1,7 +1,6 @@
-@@ -1,428 +0,0 @@
 /* <Malus Necessarium>, by <Lasinger, Lehner, Sarvan, Paukner>. */
 
-:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/0, dialogue_done/1, dialogue_stage/1, colleague_rescued/0, colleague_killed/0, laptop_unlocked/0.
+:- dynamic i_am_at/1, at/2, holding/1, light_on/1, is_open/1, interaction_mode/0, dialogue_done/1, dialogue_stage/1, colleague_rescued/0, colleague_robbed/0, laptop_unlocked/0.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
 
 i_am_at(interrogation_room).
@@ -158,7 +157,7 @@ investigate(electrical_box) :- i_am_at(electrical_room), write('You open the ele
 investigate(documents) :- i_am_at(office_room), write('You find a page that only says Password: Turing'), !, nl.
 investigate(laptop) :- i_am_at(operation_room), write('The laptop is locked. Entering a password (enter_password(Password)) might help.'), !, nl.
 investigate(desk) :- i_am_at(operation_room), write('In one of the drawers you find pictures of other politicians and powerful people. Are these the next targets? You should probably take these desk documents with you.'), !, nl.
-investigate(shelf) :- i_am_at(operation_room), write('Files about the dead US-Vice-President Thomas King and the dead President Mohammed Abiba? Their deaths were declared accidents. Looks like these bastards are behind it. You should probably take these shelf documents with you.'), !, nl.
+investigate(shelf) :- i_am_at(operation_room), write('Files about the dead US-Vice-President Thomas King and the dead President Mohammed Abiba? Their deaths were declared accidents. Looks like these moysterious figures are behind it. You should probably take these shelf documents with you.'), !, nl.
 investigate(cupboard) :- i_am_at(party_room), write('You find a bottle of alcohol, an old piece of clothing and a lighter. What a coincidence! Your natural instincts have just made a molotov out of it! You also notice a crate labelled "fire" in the back. The supposed destination is the interrogation room.'), nl, assert(holding(molotov)).
 
 /* Easter Egg */
@@ -317,14 +316,14 @@ describe(janitor_room) :- write('When you open the door it looks just like a typ
 
 describe(office_room) :- write('This room seems to have been converted from a living room to an office with documents lying all over the place. Maybe they are worth investigating.'), !, nl.
 
-describe(upper_exit) :- (holding(gun); holding(silenced_gun)), write('You open the door and give the 2 guards clean headshots. You finally step into freedom...'), !, nl, end.
-describe(upper_exit) :- write('You open the door but with nothing to fight with the 2 guards make your body look like swiss cheese quite quickly. After you drop to the ground they finish you with a headshot.'), !, nl, die.
+describe(upper_exit) :- (holding(gun); holding(silenced_gun)), write('You open the door and hit the 2 guards with the sleep dart and they fall to the ground. You finally step into freedom...'), !, nl, end.
+describe(upper_exit) :- write('You open the door but with nothing to fight with the 2 guards have no problem putting you to sleep forever.'), !, nl, die.
 
-describe(operation_room) :- holding(silenced_gun), write('You open the door and find 2 LASKians immediately noticing you and starting to draw their guns but with your silenced gun you manage to kill them without making much noise. You close the door and take care of the bodies. This room seems to be their operation room so there are a lot of things worth investigating like the shelf, the desk and the laptop on top if it.'), !, nl.
-describe(operation_room) :- holding(gun), write('You open the door and find 2 LASKians immediately noticing you and starting to draw their guns leaving you no choice but to gun them down. You take a deep breath but you hear people running through the hallways. As they come around the corner you start shooting at them. Unfortunately, you are heavily outnumbered and outgunned. Out of all the bullets that hit you, one goes through your head killing you.'), !, nl, die.
-describe(operation_room) :- write('You open the door and find 2 LASKians immediately noticing you and starting to draw their guns. With nothing to defend yourself they make your body look like swiss cheese quite quickly. After you drop to the ground they finish you with a headshot.'), !, nl, die.
+describe(operation_room) :- holding(silenced_gun), write('You open the door and find 2 LASKians immediately noticing you and trying to attack you but with your silenced gun you manage to hit both of them with sleep darts without making much noise. You close the door and take care of the bodies. This room seems to be their operation room so there are a lot of things worth investigating like the shelf, the desk and the laptop on top if it.'), !, nl.
+describe(operation_room) :- holding(gun), write('You open the door and find 2 LASKians immediately noticing you and trying to attack you leaving. You have no choice but to fight back. You take a deep breath but you hear people running through the hallways. As they come around the corner you start defending yourself. Unfortunately, you are heavily outnumbered. The rest of the guards take you down.'), !, nl, die.
+describe(operation_room) :- write('You open the door and find 2 LASKians immediately noticing you and starting to attack you. With nothing to defend yourself they have no problem beating the living sh*t ot of you.'), !, nl, die.
 
-describe(living_room) :- write('You open the door and find a LASKian sitting on a couch and eating door. While he is still occupied you slowly creep toward him and snap his neck from behind. As you hide his body you notice his handgun which could come in handy in the near future. There doesn''t seem to be anything useful in this room.'), !, nl.
+describe(living_room) :- write('You open the door and find a LASKian sitting on a couch and eating door. While he is still occupied you slowly creep toward him and knock him out from behind. As you hide his body you notice his handgun and sleep darts, that are usally used to put animals to sleep, which could come in handy in the near future. There doesn''t seem to be anything else useful in this room.'), !, nl.
 
 describe(hallway_l1) :- write('You are in hallway L1. To the east is hallway L2. To the south is hallway L7. To the west is an emergency exit.'), !, nl.
 describe(hallway_l2) :- write('You are in hallway L2. To the north is a room that appears to serve as a prison. To the east is hallway L3. To the west is hallway L1.'), !, nl.
@@ -375,7 +374,7 @@ print_laptop_score :- write('laptop not secured'), nl, !.
 print_evidence_score :- holding(shelf_documents), holding(desk_documents), holding(laptop), laptop_unlocked, write('You secured all evidence. Excellent work!'), nl, !.
 print_evidence_score :- write('It seems that you failed to secure all evidence.'), nl.
 
-print_hostage_score :- colleague_killed, write('Why did you kill your fellow Tiro? Do you trust your enemies more than your comrades?'), nl, !.
+print_hostage_score :- colleague_robbed, write('Why did you betray your fellow Tiro? Do you trust your enemies more than your comrades?'), nl, !.
 print_hostage_score :- colleague_rescued, write('You have rescued your fellow Tiro. Well done!'), nl, !.
 print_hostage_score :- write('You eihter missed the hostage or just left him in there. Disappointing'), nl.
 
@@ -396,34 +395,34 @@ print_options(1_5) :- write('    1. Try to untie yourself'), nl, write('    2. W
 print_options(1_6) :- write('    1. Trap the interrogater'), nl, write('    2. Flee'), nl, !.
 print_options(1_7) :- write('    1. Talk'), nl, write('    2. Lie'), nl, write('    3. Remain silent'), nl, !.
 print_options(1_8) :- write('    1. Trap the interrogater'), nl, write('    2. Flee'), nl, !.
-print_options(jail) :- write('    1. Kill the unconscious man too'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
+print_options(jail) :- write('    1. Rob the unconscious man'), nl, write('    2. Rescue the unconscious man'), nl, write('    3. Leave them alone').
 			
 choose(1) :- dialogue_stage(1_1), retract(dialogue_stage(1_1)), assert(dialogue_stage(1_2)), print_dialogue(1_2), print_options(1_2), !.
 choose(1) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), assert(dialogue_stage(1_3)), print_dialogue(1_3), print_options(1_3), !.
 choose(1) :- dialogue_stage(1_3), retract(dialogue_stage(1_3)), write('You manage to land a near perfect kick on his knee. You manage to dislocate it. He tumbles and drops to the ground. You hit him over the head with your chair. He drops unconscious, the chair brakes, you free yourself from your ties.'), nl, retract(interaction_mode), look, !.
-choose(2) :- dialogue_stage(1_3), retract(dialogue_stage(1_3)), write('LASK is superior to Blau-Weiss.'), nl, write('ZAAAP! The lie detector overcharges and electrocutes the puddle (due to the exposed cable bits), in which the interrogater is standing. He drops to the floor. Although his body''s still twitching, he''s surely dead.'), nl, retract(interaction_mode), look, !.
+choose(2) :- dialogue_stage(1_3), retract(dialogue_stage(1_3)), write('LASK is superior to Blau-Weiss.'), nl, write('ZAAAP! The lie detector overcharges and electrocutes the puddle (due to the exposed cable bits), in which the interrogater is standing. He drops to the floor. Although his body''s still twitching, he''s surely knocked out.'), nl, retract(interaction_mode), look, !.
 choose(2) :- dialogue_stage(1_1), retract(dialogue_stage(1_1)), nl, assert(dialogue_stage(1_4)), print_options(1_4), !.
 choose(2) :- dialogue_stage(1_2), retract(dialogue_stage(1_2)), nl, assert(dialogue_stage(1_4)), print_options(1_4), !.
 choose(1) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_5)), print_dialogue(1_5), print_options(1_5), !.
 choose(1) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_6)), print_dialogue(1_6), print_options(1_6), !.
-choose(1) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write('As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow.'), nl, retract(interaction_mode), look, !.
-choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you.'), nl, die, !.
+choose(1) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write('As the interrogater enters the room you try to tie him up with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow.'), nl, retract(interaction_mode), look, !.
+choose(2) :- dialogue_stage(1_6), retract(dialogue_stage(1_6)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and take you down.'), nl, die, !.
 choose(2) :- dialogue_stage(1_5), retract(dialogue_stage(1_5)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
 choose(2) :- dialogue_stage(1_4), retract(dialogue_stage(1_4)), assert(dialogue_stage(1_7)), print_dialogue(1_7), print_options(1_7), !.
-choose(1) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write('Long time ago. I don''t really know anything that I have not learned from the news.'), nl, write('The lie detector does nothing'), nl, write('Very well, thank you for your cooperation. You''re no longer worth anything to me anymore.'), nl, write('The interrogater turns up the voltage to the maximum.'), nl, die, !.
+choose(1) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write('Long time ago. I don''t really know anything that I have not learned from the news.'), nl, write('The lie detector does nothing'), nl, write('Very well, thank you for your cooperation. You''re no longer worth anything to me anymore.'), nl, write('The interrogater turns up the voltage to the maximum. You fade out...'), nl, die, !.
 choose(2) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), assert(dialogue_stage(1_8)), print_dialogue(1_8), print_options(1_8), !.																/*rewrite*/
-choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('As the interrogater enters the room you strangle him with the rope you were tied up with. The rope breaks, but you manage to subdue the interrogater anyhow.'), nl, retract(interaction_mode), look, !.
-choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and shoot you.'), nl, die, !.
+choose(1) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('As the interrogater enters the room you subdue him with the rope you were tied up with until he becomes unconscious. The rope breaks, but you manage to subdue the interrogater anyhow.'), nl, retract(interaction_mode), look, !.
+choose(2) :- dialogue_stage(1_8), retract(dialogue_stage(1_8)), write('Through bad luck, you run into the interrogater while trying to flee. He sounds the alarm. Seconds later guards swarm the floor and take you down.'), nl, die, !.
 choose(3) :- dialogue_stage(1_7), retract(dialogue_stage(1_7)), write('...'), nl, write('I have warned you, but you don''t seem to listen. Chosen your own fate, huh?'), nl, write('The interrogater turns up the voltage to the maximum.'), nl, die, !.
-choose(1) :- i_am_at(jail), write('Sandman brings a bad dream - You snap the sleeping man''s neck. Exit is to the south.'), assert(colleague_killed).
+choose(1) :- i_am_at(jail), write('Sandman brings a bad dream - You try robbing him but he has nothing left to take. Exit is to the south.'), assert(colleague_robbed).
 choose(2) :- i_am_at(jail), write('You lift his unconscious body up and carry him on your shoulder. Exit is to the south.'), assert(colleague_rescued).
 choose(3) :- i_am_at(jail), write('Nothing happens. Exit is to the south.').
 		
 print_dialogue(interrogation_room) :- write('Good evening Tiro FE9. Do you have any clue why you are here tonight? Well, how should you?'), nl, write('I know that you are a Tiro of Azul Blanco and as you might have guessed, that is a minor inconvenience for me. I have a few questions for you now. You better answer correctly, you won''t fancy the alternative. See this machine over there? ICA approved lie detector, shocks you if you lie. One of your friends has already tested that. Let''s say, it didn''t exactly work out for him. The other friend of yours, on the contrary, chose to cooperate. Smart guy! Choice is yours...'), nl, assert(dialogue_stage(1_1)), !.
-print_dialogue(1_2) :- write('As if I believed a word coming from such a bloody c*nt like you. Who the f*ck do you think you are, thinking you could threaten me like that?'), nl, write('ZAP'), nl, write('Your entire body twitches. It seriously hurts.'), nl, write('You fookin'' nonce. You think you''re smart, ey? Lemme tell you something. You''re not in charge here. NOW TALK!'), nl, !.
+print_dialogue(1_2) :- write('As if I believed a word coming from such a liar like you. Who do you think you are, thinking you could threaten me like that?'), nl, write('ZAP'), nl, write('Your entire body twitches. It seriously hurts.'), nl, write('You f*kin'' nonce. You think you''re smart, ey? Lemme tell you something. You''re not in charge here. NOW TALK!'), nl, !.
 print_dialogue(1_3) :- write('Could you come a lil'' closer, I didn''t hear you.'), nl, write('The interrogater walks towards you. You hear a silent splash.'), nl, !.
 print_dialogue(1_5) :-  write('I don''t believe you, show me evidence that you even have captured the other Tiros.'), nl, write('Very well, make yourself comfortable in the meantime.'), nl, write('The interrogater leaves the room'), nl, !.
 print_dialogue(1_6) :- write('You have managed to untie yourself.'), nl, !.
 print_dialogue(1_7) :-  write('What do you want from me?'), nl, write('The Lynn-Incident. Rings a bell?'), nl, !.
-print_dialogue(1_8) :-  write('As much as you want to know, but you better take notes, I will only tell you once.'), nl, write('Alright.'), nl, write('The interrogater leaves the room. The lie detector fires a delayed shock breaking apart the rope, with which you''re tied up with, and fall off.'), nl, !.		
-print_dialogue(jail) :- write('One of the two men appears to be dead. The other one seems to be unconscious.'), nl.
+print_dialogue(1_8) :-  write('As much as you want to know, but you better take notes, I will only tell you once.'), nl, write('Alright.'), nl, write('The interrogater leaves the room. The lie detector fires a delayed shock breaking apart the rope, with which you''re tied up with, and it falls off.'), nl, !.		
+print_dialogue(jail) :- write('One of the two men appears to be unrelated to your mission. The other one seems to be unconscious.'), nl.
